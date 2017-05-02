@@ -53,7 +53,9 @@ end
 
 -- BLOCK 1: Query functions
 function RAB_DefaultQueryHandler(query, cmd, needraw, needtxt)
- local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort, rawgroup = 0,0,0, "", "", "", "","", (RAB_Buffs[cmd].invert ~= nil);
+ local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort, rawgroup = 0,0,0, "", "", "", 
+
+"","", (RAB_Buffs[cmd].invert ~= nil);
 
  local buffname = RAB_Buffs[cmd].name;
 
@@ -89,9 +91,13 @@ function RAB_DefaultQueryHandler(query, cmd, needraw, needtxt)
 	isFading, fadetime = RAB_ShouldRecast(u, cmd, isbuffed);
 	fading = fading + (isFading and 1 or 0);
 	if (needraw or needtxt) then
-		tinsert(raw, {unit=u, name=UnitName(u) .. ((appl ~= nil and appl > 1) and " [" .. appl .. "]" or ""), class=RAB_UnitClass(u), group=group, buffed=isbuffed,fade=fadetime});
+		tinsert(raw, {unit=u, name=UnitName(u) .. ((appl ~= nil and appl > 1) and " [" .. appl .. "]" or ""), 
+
+class=RAB_UnitClass(u), group=group, buffed=isbuffed,fade=fadetime});
 	end
-        if (RAB_Buffs[cmd].unique == nil or (RAB_Buffs[cmd].unique == true and RAB_UnitClass(u) == RAB_Buffs[cmd].castClass)) then
+        if (RAB_Buffs[cmd].unique == nil or (RAB_Buffs[cmd].unique == true and RAB_UnitClass(u) == RAB_Buffs
+
+[cmd].castClass)) then
 		total = total + 1;
 	end
 	buffed = buffed + (isbuffed and 1 or 0);
@@ -111,8 +117,12 @@ function RAB_DefaultQueryHandler(query, cmd, needraw, needtxt)
   end
  end
 
- txthead = ((RAB_Buffs[cmd].missbuff ~= nil) and RAB_Buffs[cmd].missbuff or string.format(sRAB_BuffOutput_MissingOn, buffname)) .. ":";
- hashead = ((RAB_Buffs[cmd].havebuff ~= nil) and RAB_Buffs[cmd].havebuff or string.format(sRAB_BuffOutput_IsOn, buffname)) .. ":";
+ txthead = ((RAB_Buffs[cmd].missbuff ~= nil) and RAB_Buffs[cmd].missbuff or string.format(sRAB_BuffOutput_MissingOn, 
+
+buffname)) .. ":";
+ hashead = ((RAB_Buffs[cmd].havebuff ~= nil) and RAB_Buffs[cmd].havebuff or string.format(sRAB_BuffOutput_IsOn, 
+
+buffname)) .. ":";
 
  if (table.getn(raw) > 0) then
   local ub, bb, uc, bc,ident = "","",0,0,false;
@@ -121,13 +131,17 @@ function RAB_DefaultQueryHandler(query, cmd, needraw, needtxt)
    if (ident ~= raw[i][rawsort] and ident ~= false) then
     if (uc == 0) then
      if (bc > 1) then
-	hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group or "") .. ident .. (rawsort == "class" and "s" or "") .. " [" .. bc .. "]";
+	hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group or "") .. ident 
+
+.. (rawsort == "class" and "s" or "") .. " [" .. bc .. "]";
      else
 	hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. bb;
      end
     elseif (bc == 0) then
      if (uc > 1) then
-	txt = txt .. (txt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident  .. (rawsort == "class" and "s" or "") .. " [" .. uc .. "]";
+	txt = txt .. (txt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident  .. 
+
+(rawsort == "class" and "s" or "") .. " [" .. uc .. "]";
      else
 	txt = txt .. (txt ~= "" and ", " or "") .. ub;
      end
@@ -147,9 +161,13 @@ function RAB_DefaultQueryHandler(query, cmd, needraw, needtxt)
    end
   end
   if (uc == 0) then
-   hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident .. (rawsort == "class" and "s" or "")  .. " [" .. bc .. "]";
+   hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident .. 
+
+(rawsort == "class" and "s" or "")  .. " [" .. bc .. "]";
   elseif (bc == 0) then
-   txt = txt .. (txt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident .. (rawsort == "class" and "s" or "")  .. " [" .. uc .. "]";
+   txt = txt .. (txt ~= "" and ", " or "") .. (rawsort == "group" and sRAB_BuffOutput_Group  or "") .. ident .. (rawsort 
+
+== "class" and "s" or "")  .. " [" .. uc .. "]";
   else
    hastxt = hastxt .. (hastxt ~= "" and ", " or "") .. bb;
    txt = txt .. (txt ~= "" and ", " or "") .. ub;
@@ -218,11 +236,17 @@ function RAB_QueryBuffInfo()
 		debuffs = debuffs .. (debuffs == "" and "" or ", ") .. b;
 		i = i + 1;
 	end
-	local text = string.format(sRAB_BuffOutput_BuffInfo_General,UnitName("target"),(buffs == "" and sRAB_BuffOutput_BuffInfo_None or buffs), (debuffs == "" and sRAB_BuffOutput_BuffInfo_None or debuffs));
+	local text = string.format(sRAB_BuffOutput_BuffInfo_General,UnitName("target"),(buffs == "" and 
+
+sRAB_BuffOutput_BuffInfo_None or buffs), (debuffs == "" and sRAB_BuffOutput_BuffInfo_None or debuffs));
 	return 0,0,0,"","","",text,text;
 end
 function RAB_QueryHere(msg,needraw,needtxt)
-	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", sRAB_BuffOutput_Here_NotHere, sRAB_BuffOutput_Here_Here, sRAB_BuffOutput_Here_NotHere .. " ",sRAB_BuffOutput_Here_Here .. " ", false, nil, "append";
+	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", 
+
+sRAB_BuffOutput_Here_NotHere, sRAB_BuffOutput_Here_Here, sRAB_BuffOutput_Here_NotHere .. " ",sRAB_BuffOutput_Here_Here .. 
+
+" ", false, nil, "append";
 	if (needraw) then raw = {}; end
 	local inraid = UnitInRaid("player");
 	local myzone = "noraid";
@@ -263,7 +287,9 @@ function RAB_QueryHere(msg,needraw,needtxt)
 			buffed = buffed + 1; isbuffed = true;
 		end
 --		if (UnitInRaid("player")) then append = " [" .. group .. "]"; end
-		if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,buffed=false,unit=u,append=append,buffed=isbuffed,zone=zone}); end
+		if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,buffed=false,unit=u,append=append,buffed=isbuffed,zone=zone}); end
 	end
 	if (total > 1 and needraw and UnitInRaid("player")) then 
 		table.sort(raw,function (a,b) return a.zone < b.zone end);
@@ -280,10 +306,16 @@ function RAB_QueryHere(msg,needraw,needtxt)
 	return buffed, 0, total, misc, txthead, hashead, txt, hastxt, invert, raw, "zone", "%s";
 end
 function RAB_QueryCTRAVersion(msg, needraw, needtxt)
-	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", sRAB_BuffOutput_CTRA_OutOfDate, sRAB_BuffOutput_CTRA_Recent, sRAB_BuffOutput_CTRA_OutOfDate .. " ",sRAB_BuffOutput_CTRA_Recent .. " ", false;
+	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", 
+
+sRAB_BuffOutput_CTRA_OutOfDate, sRAB_BuffOutput_CTRA_Recent, sRAB_BuffOutput_CTRA_OutOfDate .. " 
+
+",sRAB_BuffOutput_CTRA_Recent .. " ", false;
 	if (needraw) then raw = {}; rawsort = "group"; end
 	if (RAB_CTRA_ResponsibleHandler ~= "CTRA") then
-		return 0, 0, 0, sRAB_BuffOutput_CTRA_NoCTRA, "", "", sRAB_BuffOutput_CTRA_NoCTRA, sRAB_BuffOutput_CTRA_NoCTRA;
+		return 0, 0, 0, sRAB_BuffOutput_CTRA_NoCTRA, "", "", sRAB_BuffOutput_CTRA_NoCTRA, 
+
+sRAB_BuffOutput_CTRA_NoCTRA;
 	end
 	local i, pv, isbuffed = 1, RAB_CTRA_GetVersion(UnitName("player"));
 
@@ -301,7 +333,9 @@ function RAB_QueryCTRAVersion(msg, needraw, needtxt)
 				else			
 					txt = txt .. UnitName(u) .. " [" .. cv .. "], ";
 				end
-				if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,buffed=isbuffed,unit=u, version=cv}); end
+				if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,buffed=isbuffed,unit=u, version=cv}); end
 			end
 		end
 		if (total > 1 and UnitInRaid("player") and needraw) then 
@@ -336,7 +370,9 @@ function RAB_ScanRaid(msg)
 		end
 	end
 	for key, val in oc do 
-		out = (out == "" and "" or (out .. ", ")) .. "[" .. (scanwhat == "known" and RAB_Buffs[key].name or key) .. "]x" .. val;
+		out = (out == "" and "" or (out .. ", ")) .. "[" .. (scanwhat == "known" and RAB_Buffs[key].name or key) 
+
+.. "]x" .. val;
 	end
 
 	out = (scanwhat == "known" and "B" or "Unknown b") .. "uffs: " .. (out == "" and "none" or out) .. ".";
@@ -345,7 +381,9 @@ end
 function RAB_QueryHealth(msg, needraw, needtxt)
 	local _,_,bkey = string.find(msg,"(%a+)");
 	local type = RAB_Buffs[bkey].ext;
-	local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0,0, "", sRAB_BuffOutput_Health_Dead, sRAB_BuffOutput_Health_Alive,"","", false;
+	local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0,0, "", 
+
+sRAB_BuffOutput_Health_Dead, sRAB_BuffOutput_Health_Alive,"","", false;
 	local i,hp_cur, hp_max, hp_alive, hp_dead, hp_deadtext,hp_alivetext = 0,0,0,0,0,"","";
 	if (needraw) then raw = {}; end
 	local group, uinfo,u, isbuffed, append;
@@ -365,7 +403,9 @@ function RAB_QueryHealth(msg, needraw, needtxt)
 				fading = fading + 1;
 			end
 		end
-		if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,buffed=isbuffed,unit=u,append=append}); end
+		if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,buffed=isbuffed,unit=u,append=append}); end
 	end 
 	if (total > 1 and UnitInRaid("player") and needraw) then 
 		table.sort(raw,function (a,b) return a.group < b.group end);
@@ -382,14 +422,20 @@ function RAB_QueryHealth(msg, needraw, needtxt)
 	if (needtxt) then
 		if (hp_dead > 0) then
 			if (hp_alive > 0) then
-				txt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/(hp_max > 0 and hp_max or 1)), string.format(sRAB_BuffOutput_Health_DeadPart,hp_dead, hp_deadtext));
-				hastxt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/(hp_max > 0 and hp_max or 1)), string.format(sRAB_BuffOutput_Health_AlivePart,hp_alive, hp_alivetext));
+				txt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/
+
+(hp_max > 0 and hp_max or 1)), string.format(sRAB_BuffOutput_Health_DeadPart,hp_dead, hp_deadtext));
+				hastxt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/
+
+(hp_max > 0 and hp_max or 1)), string.format(sRAB_BuffOutput_Health_AlivePart,hp_alive, hp_alivetext));
 			else
 				repl.txt = sRAB_BuffOutput_Health_EveryoneDead;
 				repl.hastxt = sRAB_BuffOutput_Health_EveryoneDead;
 			end
 		else
-			txt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/(hp_max > 0 and hp_max or 1)), ".");
+			txt = string.format(sRAB_BuffOutput_Health_Default,hp_cur, hp_max, floor(hp_cur*100/(hp_max > 0 
+
+and hp_max or 1)), ".");
 			hastxt = txt;
 		end
 	end
@@ -403,7 +449,9 @@ function RAB_QueryInventoryItem(msg, needraw, needtxt)
 	if (itemName == nil) then itemName = string.format(sRAB_BuffOutput_Item_Unknown,match); end
 
 
-	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", string.format(sRAB_BuffOutput_Item_Missing,itemName), string.format(sRAB_BuffOutput_Item_Have,itemName),"","", false;
+	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", string.format
+
+(sRAB_BuffOutput_Item_Missing,itemName), string.format(sRAB_BuffOutput_Item_Have,itemName),"","", false;
 	if (needraw) then raw = {}; end
 	local i, u, group, isbuffed, item;
 
@@ -417,7 +465,9 @@ function RAB_QueryInventoryItem(msg, needraw, needtxt)
 			else
 				txt =  txt .. UnitName(u) .. ", ";
 			end
-			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,buffed=isbuffed,unit=u,append=append}); end
+			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,buffed=isbuffed,unit=u,append=append}); end
 		end
 	end 
 	if (total > 1 and UnitInRaid("player") and needraw) then 
@@ -439,7 +489,9 @@ function RAB_QueryInventoryItem(msg, needraw, needtxt)
 	return buffed, 0, total, misc, txthead, hashead, txt, hastxt, invert, raw, "group", sRAB_Core_GroupFormat;
 end
 function RAB_QueryMana(msg, needraw, needtxt)
-	local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0,0, "", sRAB_BuffOutput_Mana_OutOfMana, sRAB_BuffOutput_Mana_Fine,"","", false;
+	local buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0,0, "", 
+
+sRAB_BuffOutput_Mana_OutOfMana, sRAB_BuffOutput_Mana_Fine,"","", false;
 	local mana_max, mana_cur, mana_dead, mana_oom, mana_oomt = 0,0,0,0, "";
 	if (needraw) then raw = {}; end
 	local group, u, i, isbuffed, append = 0,"",0;
@@ -465,7 +517,9 @@ function RAB_QueryMana(msg, needraw, needtxt)
 				end
 
 			end
-			if (needraw) then tinsert(raw, {name=UnitName(u), class=RAB_UnitClass(u), group=group, buffed=isbuffed, unit=u, append=append}); end
+			if (needraw) then tinsert(raw, {name=UnitName(u), class=RAB_UnitClass(u), group=group, 
+
+buffed=isbuffed, unit=u, append=append}); end
 		end 
 	end
 	if (total > 1 and UnitInRaid("player") and needraw) then 
@@ -479,14 +533,20 @@ function RAB_QueryMana(msg, needraw, needtxt)
 	end
 
 	if (needtxt) then
-		txt = "Mana: " .. mana_cur .. " / " .. mana_max .. " (" .. (mana_max > 0 and floor(mana_cur*100/mana_max) or "0") .. "%); " .. mana_oom .. " oom; " .. mana_dead .. " dead.";
+		txt = "Mana: " .. mana_cur .. " / " .. mana_max .. " (" .. (mana_max > 0 and floor(mana_cur*100/mana_max) 
+
+or "0") .. "%); " .. mana_oom .. " oom; " .. mana_dead .. " dead.";
 		txt = string.gsub(string.gsub(txt,"; 0 oom",""),"; 0 dead","");
 		hastxt = txt;	
 	end
 	return buffed, fading, total, misc, txthead, hashead, txt, hastxt, invert, raw, "group", sRAB_Core_GroupFormat;
 end
 function RAB_QueryWater(msg,needraw,needtxt)
-	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", sRAB_BuffOutput_Water_Out, sRAB_BuffOutput_Water_Have, sRAB_BuffOutput_Water_Out .. " ",sRAB_BuffOutput_Water_Have .. " ", false;
+	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", 
+
+sRAB_BuffOutput_Water_Out, sRAB_BuffOutput_Water_Have, sRAB_BuffOutput_Water_Out .. " ",sRAB_BuffOutput_Water_Have .. " 
+
+", false;
 	if (needraw) then raw = {}; end
 
 	local isbuffed, append;
@@ -495,15 +555,21 @@ function RAB_QueryWater(msg,needraw,needtxt)
 			RAB_BuffTimers[UnitName(u) .. ".h2oc"] = RAB_CountItems(8079);
 		end
 		if (RAB_BuffTimers[UnitName(u) .. ".h2oc"] ~= nil) then
-			total = total + 1; append = " [" .. RAB_BuffTimers[UnitName(u) .. ".h2oc"] .. "]" ; isbuffed = false;
+			total = total + 1; append = " [" .. RAB_BuffTimers[UnitName(u) .. ".h2oc"] .. "]" ; isbuffed = 
+
+false;
 			isbuffed = (RAB_BuffTimers[UnitName(u) .. ".h2oc"] > 3);
 			if (needtxt and isbuffed) then 
-				hastxt =  hastxt .. UnitName(u) .. " [" .. RAB_BuffTimers[UnitName(u) .. ".h2oc"] .. "], ";
+				hastxt =  hastxt .. UnitName(u) .. " [" .. RAB_BuffTimers[UnitName(u) .. ".h2oc"] .. "], 
+
+";
 			elseif (needtxt and not isbuffed) then
 				txt =  txt .. UnitName(u) .. " [" .. RAB_BuffTimers[UnitName(u) .. ".h2oc"] .. "], ";
 			end
 			if (isbuffed) then buffed = buffed + 1; end
-			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,unit=u,append=append,buffed=isbuffed}); end
+			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,unit=u,append=append,buffed=isbuffed}); end
 		end
 	end
 	if (total > 1 and needraw and UnitInRaid("player")) then 
@@ -524,9 +590,13 @@ end
 function RAB_QueryDebuff(msg,needraw,needtxt)
 	local _,_,bkey = string.find(msg,"(%a+)");
 	local btype = RAB_Buffs[bkey].ext
-	local bText = getglobal("sRAB_BuffOutput_Debuff_" .. (btype == "" and "Typeless" or (btype == "SELF" and "Curable" or btype)));
+	local bText = getglobal("sRAB_BuffOutput_Debuff_" .. (btype == "" and "Typeless" or (btype == "SELF" and 
 
-	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", string.format(sRAB_BuffOutput_Debuff_NotHave,bText), string.format(sRAB_BuffOutput_Debuff_Have,bText),"","", true;
+"Curable" or btype)));
+
+	local buffed, total, misc, txthead, hashead, txt, hastxt, invert, raw, rawsort = 0,0, "", string.format
+
+(sRAB_BuffOutput_Debuff_NotHave,bText), string.format(sRAB_BuffOutput_Debuff_Have,bText),"","", true;
 	if (needraw) then raw = {}; end
 	local i, u, group, j, isbuffed, item;
 	local f = (btype == "SELF") and 1 or 0;
@@ -548,7 +618,9 @@ function RAB_QueryDebuff(msg,needraw,needtxt)
 				txt =  txt .. UnitName(u) .. ", ";
 			end
 			if (isbuffed) then buffed = buffed + 1; end
-			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass(u),group=group,unit=u,append=append,buffed=isbuffed}); end
+			if (needraw) then tinsert(raw, {name=UnitName(u),class=RAB_UnitClass
+
+(u),group=group,unit=u,append=append,buffed=isbuffed}); end
 		end
 	end 
 	if (total > 1 and UnitInRaid("player") and needraw) then 
@@ -634,7 +706,9 @@ function RAB_DefaultCastingHandler(mode, query)
 
  local dogroupbuff, mygroup = IsAltKeyDown(), 0;
  if (RABui_Settings.castbigbuffs) then dogroupbuff = not dogroupbuff; end
- if (RAB_Buffs[cmd].bigcast == nil or not RAB_CastSpell_IsCastable(RAB_Buffs[cmd].bigcast,true,true)) then dogroupbuff = false; end
+ if (RAB_Buffs[cmd].bigcast == nil or not RAB_CastSpell_IsCastable(RAB_Buffs[cmd].bigcast,true,true)) then dogroupbuff = 
+
+false; end
 
  local canbuff, reason, howmuch = RAB_CastSpell_IsCastable(cmd,true,true);
  if (not (canbuff or dogroupbuff)) then
@@ -666,7 +740,9 @@ function RAB_DefaultCastingHandler(mode, query)
   local pri = UnitIsUnit("player",u) and (RAB_Buffs[cmd].selfPriority ~= nil and RAB_Buffs[cmd].selfPriority or 5) or 1;
   if (g == mygroup) then pri = pri + 1; end
   if (RAB_CastLog[u] ~= nil and RAB_CastLog[u] >= time()) then pri = pri / 10; end
-  if (RAB_Buffs[cmd].priority ~= nil and RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))] ~= nil) then pri = pri + RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))]; end
+  if (RAB_Buffs[cmd].priority ~= nil and RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))] ~= nil) then pri = pri + 
+
+RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))]; end
   if (RAB_IsEligible(u,cmd) and RAB_IsSanePvP(u) and RAB_RangeCheck(mode, u, cmd) and pri > 0) then
    if (not RAB_IsBuffUp(u,cmd)) then
     tinsert(people,{u=u,group=g,class=RAB_UnitClass(u),p=pri});
@@ -689,7 +765,9 @@ function RAB_DefaultCastingHandler(mode, query)
   if (mode == "cast") then 
    RAB_CastSpell_Abort(); 
    if (pvpfail > 0 or rangefail > 0) then
-    UIErrorsFrame:AddMessage( string.format(sRAB_CastingLayer_NoCast, RAB_Buffs[cmd].name, pvpfail, rangefail), 1, 0, 0, 1, 1.5);
+    UIErrorsFrame:AddMessage( string.format(sRAB_CastingLayer_NoCast, RAB_Buffs[cmd].name, pvpfail, rangefail), 1, 0, 0, 
+
+1, 1.5);
    else
     UIErrorsFrame:AddMessage( string.format(sRAB_CastingLayer_NoNeed, RAB_Buffs[cmd].name), 1, 0, 0, 1, 1.5);
    end
@@ -700,7 +778,9 @@ function RAB_DefaultCastingHandler(mode, query)
   clicktocast = sRAB_Tooltip_ClickToRecast;
  end
 
- if (dogroupbuff and table.getn(people) < RAB_Buffs[cmd].bigthreshold and not RABui_Settings.alwayscastbigbuffs) then dogroupbuff = false; end
+ if (dogroupbuff and table.getn(people) < RAB_Buffs[cmd].bigthreshold and not RABui_Settings.alwayscastbigbuffs) then 
+
+dogroupbuff = false; end
  if (dogroupbuff) then
   local bsort, bsortkeys, stype = {}, {}, RAB_Buffs[cmd].bigsort;
   for key, val in people do
@@ -720,13 +800,17 @@ function RAB_DefaultCastingHandler(mode, query)
     if (RAB_CastSpell_Start(RAB_Buffs[cmd].bigcast)) then
      RAB_CastSpell_Target(bsort[1].cast);
      RAB_ResetRecastTimer(bsort[1].cast, cmd, RAB_Buffs[cmd].bigsort);
-     RAB_Print(string.format(sRAB_CastBuff_Cast, bname, RAB_Chat_Colors[RAB_UnitClass(bsort[1].cast)] .. UnitName(bsort[1].cast) .. " [" .. bsort[1].key .. "]"));
+     RAB_Print(string.format(sRAB_CastBuff_Cast, bname, RAB_Chat_Colors[RAB_UnitClass(bsort[1].cast)] .. UnitName(bsort
+
+[1].cast) .. " [" .. bsort[1].key .. "]"));
      return true;
     else
      RAB_CastSpell_Start(cmd);
     end
    else
-    return string.format(clicktocast, bname, RAB_Chat_Colors[RAB_UnitClass(bsort[1].cast)] .. UnitName(bsort[1].cast) .. " [" .. bsort[1].key .. "]");
+    return string.format(clicktocast, bname, RAB_Chat_Colors[RAB_UnitClass(bsort[1].cast)] .. UnitName(bsort[1].cast) .. 
+
+" [" .. bsort[1].key .. "]");
    end
   end
  end
@@ -736,7 +820,9 @@ function RAB_DefaultCastingHandler(mode, query)
  if (mode == "cast") then
   RAB_CastSpell_Target(people[1].u);
   RAB_ResetRecastTimer(people[1].u,cmd);
-  RAB_Print(string.format(sRAB_CastBuff_Cast, sRAB_SpellNames[cmd] ~= nil and sRAB_SpellNames[cmd] or RAB_Buffs[cmd].name, RAB_Chat_Colors[RAB_UnitClass(people[1].u)] .. UnitName(people[1].u)));
+  RAB_Print(string.format(sRAB_CastBuff_Cast, sRAB_SpellNames[cmd] ~= nil and sRAB_SpellNames[cmd] or RAB_Buffs
+
+[cmd].name, RAB_Chat_Colors[RAB_UnitClass(people[1].u)] .. UnitName(people[1].u)));
   return true;
  elseif (mode == "tip") then
   return string.format(clicktocast,bname, RAB_Chat_Colors[RAB_UnitClass(people[1].u)] .. UnitName(people[1].u));
@@ -820,9 +906,13 @@ function RAB_CastSoulstone(mode, query)
   local maxpri, maxpriunit = 0, "";
   for i, u, g in RAB_GroupMembers(query) do
    if (RAB_IsEligible(u,cmd) and RAB_IsSanePvP(u) and not RAB_IsBuffUp(u,cmd) and RAB_RangeCheck(mode, u)) then
-    local pri = UnitIsUnit("player",u) and (RAB_Buffs[cmd].selfPriority ~= nil and RAB_Buffs[cmd].selfPriority or 5) or 1;
+    local pri = UnitIsUnit("player",u) and (RAB_Buffs[cmd].selfPriority ~= nil and RAB_Buffs[cmd].selfPriority or 5) or 
+
+1;
     if (RAB_CastLog[u] ~= nil and RAB_CastLog[u] >= time()) then pri = pri / 10; end
-    if (RAB_Buffs[cmd].priority ~= nil and RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))] ~= nil) then pri = pri + RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))]; end 
+    if (RAB_Buffs[cmd].priority ~= nil and RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))] ~= nil) then pri = pri + 
+
+RAB_Buffs[cmd].priority[strlower(RAB_UnitClass(u))]; end 
     if (pri > maxpri) then
      maxpri = pri; maxpriunit = u;
     end
@@ -831,10 +921,14 @@ function RAB_CastSoulstone(mode, query)
   if (mode == "cast" and maxpri > 0) then
    SpellTargetUnit(maxpriunit);
    if (shouldRetarget) then TargetLastTarget(); end
-   RAB_Print(string.format(sRAB_CastBuff_Cast, GetItemInfo(item), RAB_Chat_Colors[RAB_UnitClass(maxpriunit)] .. UnitName(maxpriunit)));
+   RAB_Print(string.format(sRAB_CastBuff_Cast, GetItemInfo(item), RAB_Chat_Colors[RAB_UnitClass(maxpriunit)] .. UnitName
+
+(maxpriunit)));
    return true;
   elseif (mode == "tip" and maxpri > 0) then
-   return string.format(sRAB_Tooltip_ClickToSoulstone, RAB_Chat_Colors[RAB_UnitClass(maxpriunit)] .. UnitName(maxpriunit));
+   return string.format(sRAB_Tooltip_ClickToSoulstone, RAB_Chat_Colors[RAB_UnitClass(maxpriunit)] .. UnitName
+
+(maxpriunit));
   elseif (mode == "cast") then
    SpellStopCasting();
    if (shouldRetarget) then TargetLastTarget(); end
@@ -851,8 +945,12 @@ function RAB_CastResurrect(mode, msg)
 
  local toRes = {}; -- {u="",pri=deci};
  for i, u, group in RAB_GroupMembers(msg) do
-  if (UnitIsUnit(u,"player") ~= 1 and UnitIsVisible(u) and (RAB_UnitIsDead(u) and not UnitIsGhost(u)) and RAB_IsSanePvP(u) and (RAB_CTRA_IsBeingRessed == nil or not RAB_CTRA_IsBeingRessed(UnitName(u)))) then
-   local pri = (RAB_UnitClass(u) == "Priest" and 2 or 0) + (RAB_UnitClass(u) == "Paladin" and 2 or 0) + (RAB_UnitClass(u) == "Shaman" and 2 or 0) + (RAB_UnitClass(u) == "Mage" and 1 or 0) + (RAB_Versions[UnitName(u)] ~= nil and 0.25 or 0);
+  if (UnitIsUnit(u,"player") ~= 1 and UnitIsVisible(u) and (RAB_UnitIsDead(u) and not UnitIsGhost(u)) and RAB_IsSanePvP
+
+(u) and (RAB_CTRA_IsBeingRessed == nil or not RAB_CTRA_IsBeingRessed(UnitName(u)))) then
+   local pri = (RAB_UnitClass(u) == "Priest" and 2 or 0) + (RAB_UnitClass(u) == "Paladin" and 2 or 0) + (RAB_UnitClass(u) 
+
+== "Shaman" and 2 or 0) + (RAB_UnitClass(u) == "Mage" and 1 or 0) + (RAB_Versions[UnitName(u)] ~= nil and 0.25 or 0);
    if (RAB_CastLog[u] ~= nil and RAB_CastLog[u] > GetTime()) then pri = pri / 15; end
    tinsert(toRes, {u=u,pri=pri});
   end
@@ -864,7 +962,9 @@ function RAB_CastResurrect(mode, msg)
  end
 
  if (mode == "tip") then
-  return string.format(sRAB_Tooltip_ClickToCast, sRAB_SpellNames[res], RAB_Chat_Colors[RAB_UnitClass(toRes[1].u)] .. UnitName(toRes[1].u));
+  return string.format(sRAB_Tooltip_ClickToCast, sRAB_SpellNames[res], RAB_Chat_Colors[RAB_UnitClass(toRes[1].u)] .. 
+
+UnitName(toRes[1].u));
  end
 
  if (not RAB_CastSpell_Start(res)) then
@@ -897,112 +997,297 @@ end
 
 -- BLOCK 3: Query definitions
 RAB_Buffs = 	{
-			ai={name="Arcane Intellect",bigcast="ab",bigsort="group",bigthreshold=3,textures={"Spell_Holy_MagicalSentry", "Spell_Holy_ArcaneIntellect"},ignoreClass="wr",castClass="Mage",priority={priest=0.5,druid=0.5,paladin=0.4,shaman=0.4,warlock=0.3},ctraid=3,recast=5},
-			dampen={name="Dampen Magic",textures={"Spell_Nature_AbolishMagic"},castClass="Mage",ctraid=21,recast=3},
-			amplify={name="Amplify Magic",textures={"Spell_Holy_FlashHeal"},castClass="Mage",ctraid=20,recast=3},
-			barrier={name="Ice Barrier",textures={"Spell_Ice_Lament"},castClass="Mage",type="self",invert=true},
+			ai={name="Arcane Intellect",bigcast="ab",bigsort="group",bigthreshold=3,textures=
+
+{"Spell_Holy_MagicalSentry", "Spell_Holy_ArcaneIntellect"},ignoreClass="wr",castClass="Mage",priority=
+
+{priest=0.5,druid=0.5,paladin=0.4,shaman=0.4,warlock=0.3},ctraid=3,recast=5},
+			dampen={name="Dampen Magic",textures=
+
+{"Spell_Nature_AbolishMagic"},castClass="Mage",ctraid=21,recast=3},
+			amplify={name="Amplify Magic",textures=
+
+{"Spell_Holy_FlashHeal"},castClass="Mage",ctraid=20,recast=3},
+			barrier={name="Ice Barrier",textures=
+
+{"Spell_Ice_Lament"},castClass="Mage",type="self",invert=true},
 			block={name="Ice Block",textures={"Spell_Frost_Frost"},castClass="Mage",type="self",invert=true},
 			magearmor={name="Mage Armor",textures={"Spell_MageArmor"},castClass="Mage",type="self",recast=5},
-			frostarmor={name="Frost Armor",textures={"Spell_Frost_FrostArmor02"},castClass="Mage",type="self",recast=5},
-			water={name="Water",type="special",textures={"INV_Drink_18"},castClass="Mage",queryFunc=RAB_QueryWater,buffFunc=RAB_CastWater,description="H2O data as reported by RABuffs.",ignoreClass="rw"},
+			frostarmor={name="Frost Armor",textures=
 
-			pwf={name="Power Word: Fortitude",bigsort="group",bigthreshold=3,bigcast="pof",textures={"Spell_Holy_WordFortitude", "Spell_Holy_PrayerOfFortitude"},castClass="Priest",ctraid=1,recast=5},
-			sprot={name="Shadow Protection",bigsort="group",bigthreshold=3,bigcast="posprot",textures={"Spell_Shadow_AntiShadow","Spell_Holy_PrayerofShadowProtection"},castClass="Priest",ctraid=5,recast=3},
-			ds={name="Divine Spirit",bigsort="group",bigthreshold=3,bigcast="pos",textures={"Spell_Holy_DivineSpirit","Spell_Holy_PrayerofSpirit"},ignoreClass="wr",castClass="Priest",priority={priest=0.5,druid=0.3,mage=0.4,paladin=0.3},ctraid=8,recast=5},
-			pws={name="Power Word: Shield",textures={"Spell_Holy_PowerWordShield"},castClass="Priest",invert=true,ctraid=6},
-			fearward={name="Fear Ward",textures={"Spell_Holy_Excorcism"},castClass="Priest",invert=true,ctraid=10,recast=3},
-			innerfire={name="Inner Fire",textures={"Spell_Holy_InnerFire"},castClass="Priest",type="self",recast=3},
-			pi={name="Power Infusion",textures={"Spell_Holy_PowerInfusion"},castClass="Priest",ignoreClass="wrh",priority={priest=0.2,druid=0.2,mage=0.5,warlock=0.5},selfPriority=0},
+{"Spell_Frost_FrostArmor02"},castClass="Mage",type="self",recast=5},
+			water={name="Water",type="special",textures=
 
-			motw={name="Mark of the Wild",bigcast="gotw",bigsort="group",bigthreshold=3,textures={"Spell_Nature_Regeneration","Spell_Nature_Regeneration"},castClass="Druid",ctraid=2,recast=5},
+{"INV_Drink_18"},castClass="Mage",queryFunc=RAB_QueryWater,buffFunc=RAB_CastWater,description="H2O data as reported by 
+
+RABuffs.",ignoreClass="rw"},
+
+			pwf={name="Power Word: Fortitude",bigsort="group",bigthreshold=3,bigcast="pof",textures=
+
+{"Spell_Holy_WordFortitude", "Spell_Holy_PrayerOfFortitude"},castClass="Priest",ctraid=1,recast=5},
+			sprot={name="Shadow Protection",bigsort="group",bigthreshold=3,bigcast="posprot",textures=
+
+{"Spell_Shadow_AntiShadow","Spell_Holy_PrayerofShadowProtection"},castClass="Priest",ctraid=5,recast=3},
+			ds={name="Divine Spirit",bigsort="group",bigthreshold=3,bigcast="pos",textures=
+
+{"Spell_Holy_DivineSpirit","Spell_Holy_PrayerofSpirit"},ignoreClass="wr",castClass="Priest",priority=
+
+{priest=0.5,druid=0.3,mage=0.4,paladin=0.3},ctraid=8,recast=5},
+			pws={name="Power Word: Shield",textures=
+
+{"Spell_Holy_PowerWordShield"},castClass="Priest",invert=true,ctraid=6},
+			fearward={name="Fear Ward",textures=
+
+{"Spell_Holy_Excorcism"},castClass="Priest",invert=true,ctraid=10,recast=3},
+			innerfire={name="Inner Fire",textures=
+
+{"Spell_Holy_InnerFire"},castClass="Priest",type="self",recast=3},
+			pi={name="Power Infusion",textures=
+
+{"Spell_Holy_PowerInfusion"},castClass="Priest",ignoreClass="wrh",priority=
+
+{priest=0.2,druid=0.2,mage=0.5,warlock=0.5},selfPriority=0},
+
+			motw={name="Mark of the Wild",bigcast="gotw",bigsort="group",bigthreshold=3,textures=
+
+{"Spell_Nature_Regeneration","Spell_Nature_Regeneration"},castClass="Druid",ctraid=2,recast=5},
 			thorns={name="Thorns",textures={"Spell_Nature_Thorns"},castClass="Druid",ctraid=9,recast=3},
-			clarity={name="Omen of Clarity",textures={"Spell_Nature_CrystalBall"},castClass="Druid",type="self",recast=2},
-			druidshift={name="Shapeshifted",textures={"Ability_Druid_TravelForm","Ability_Racial_BearForm","Ability_Druid_CatForm","Ability_Druid_AquaticForm"},type="dummy",castClass="Druid"},
+			clarity={name="Omen of Clarity",textures=
 
-			bos={name="Blessing of Salvation",bigcast="gbos",bigsort="class",bigthreshold=3,textures={"Spell_Holy_SealOfSalvation","Spell_Holy_GreaterBlessingofSalvation"},ignoreMTs=true,castClass="Paladin",priority={priest=0.5,druid=0.5,mage=0.4,warlock=0.4,paladin=0.4},sort="class",ctraid=14,recast=3},
-			bow={name="Blessing of Wisdom",bigcast="gbow",bigsort="class",bigthreshold=3,textures={"Spell_Holy_SealOfWisdom","Spell_Holy_GreaterBlessingofWisdom"},ignoreClass="wr",castClass="Paladin",priority={priest=0.5,druid=0.5,mage=0.4,warlock=0.4,paladin=0.4},sort="class",ctraid=12,recast=3},
-			bok={name="Blessing of Kings",bigcast="gbok",bigsort="class",bigthreshold=3,textures={"Spell_Magic_MageArmor","Spell_Magic_GreaterBlessingofKings"},castClass="Paladin",sort="class",ctraid=13,recast=3},
-			bol={name="Blessing of Light",bigcast="gbol",bigsort="class",bigthreshold=3,textures={"Spell_Holy_PrayerOfHealing02","Spell_Holy_GreaterBlessingofLight"},castClass="Paladin",sort="class",ctraid=15,recast=3},
-			bom={name="Blessing of Might",bigcast="gbom",bigsort="class",bigthreshold=3,textures={"Spell_Holy_FistOfJustice","Spell_Holy_GreaterBlessingofKings"},ignoreClass="mplh",castClass="Paladin",sort="class",ctraid=11,recast=3},
-			bosanc={name="Blessing of Sanctuary",bigcast="gbosanc",bigsort="class",bigthreshold=3,textures={"Spell_Nature_LightningShield","Spell_Holy_GreaterBlessingofSanctuary"},castClass="Paladin",sort="class",ctraid=16,recast=3},
-			bop={name="Blessing of Protection",textures={"Spell_Holy_SealOfProtection"},castClass="Paladin",unique=true},
-			command={name="Seal of Command",textures={"Ability_Warrior_InnerRage"},castClass="Paladin",type="self"},
-			devotion={name="Devotion Aura",textures={"Spell_Holy_DevotionAura"},castClass="Paladin",type="aura"},
-			concentration={name="Concentration Aura",textures={"Spell_Holy_MindSooth"},castClass="Paladin",type="aura"},
-			fireaura={name="Fire Resistance Aura",textures={"Spell_Fire_SealOfFire"},castClass="Paladin",type="aura"},
-			shadowaura={name="Shadow Resistance Aura",textures={"Spell_Shadow_SealOfKings"},castClass="Paladin",type="aura"},
-			retribution={name="Retribution Aura",textures={"Spell_Holy_AuraOfLight"},castClass="Paladin",type="aura"},
-			frostaura={name="Frost Resistance Aura",textures={"Spell_Frost_WizardMark"},castClass="Paladin",type="aura"},
-			di={name="Divine Intervention",textures={"Spell_Nature_TimeStop"},castClass="Paladin",priority={priest=2,paladin=2,druid=1,mage=0.5},selfPriority=-10},
+{"Spell_Nature_CrystalBall"},castClass="Druid",type="self",recast=2},
+			druidshift={name="Shapeshifted",textures=
 
-			ss={name="Soulstone",textures={"Spell_Shadow_SoulGem"},castClass="Warlock",buffFunc=RAB_CastSoulstone,priority={priest=2,paladin=2,shaman=2,druid=1},selfPriority=1.2,invert=true,unique=true,ctraid=7,recast=5},
+{"Ability_Druid_TravelForm","Ability_Racial_BearForm","Ability_Druid_CatForm","Ability_Druid_AquaticForm"},type="dummy",c
+
+astClass="Druid"},
+
+			bos={name="Blessing of Salvation",bigcast="gbos",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Holy_SealOfSalvation","Spell_Holy_GreaterBlessingofSalvation"},ignoreMTs=true,castClass="Paladin",priority=
+
+{priest=0.5,druid=0.5,mage=0.4,warlock=0.4,paladin=0.4},sort="class",ctraid=14,recast=3},
+			bow={name="Blessing of Wisdom",bigcast="gbow",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Holy_SealOfWisdom","Spell_Holy_GreaterBlessingofWisdom"},ignoreClass="wr",castClass="Paladin",priority=
+
+{priest=0.5,druid=0.5,mage=0.4,warlock=0.4,paladin=0.4},sort="class",ctraid=12,recast=3},
+			bok={name="Blessing of Kings",bigcast="gbok",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Magic_MageArmor","Spell_Magic_GreaterBlessingofKings"},castClass="Paladin",sort="class",ctraid=13,recast=3},
+			bol={name="Blessing of Light",bigcast="gbol",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Holy_PrayerOfHealing02","Spell_Holy_GreaterBlessingofLight"},castClass="Paladin",sort="class",ctraid=15,recast=3}
+
+,
+			bom={name="Blessing of Might",bigcast="gbom",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Holy_FistOfJustice","Spell_Holy_GreaterBlessingofKings"},ignoreClass="mplh",castClass="Paladin",sort="class",ctra
+
+id=11,recast=3},
+			bosanc={name="Blessing of Sanctuary",bigcast="gbosanc",bigsort="class",bigthreshold=3,textures=
+
+{"Spell_Nature_LightningShield","Spell_Holy_GreaterBlessingofSanctuary"},castClass="Paladin",sort="class",ctraid=16,recas
+
+t=3},
+			bop={name="Blessing of Protection",textures=
+
+{"Spell_Holy_SealOfProtection"},castClass="Paladin",unique=true},
+			command={name="Seal of Command",textures=
+
+{"Ability_Warrior_InnerRage"},castClass="Paladin",type="self"},
+			devotion={name="Devotion Aura",textures=
+
+{"Spell_Holy_DevotionAura"},castClass="Paladin",type="aura"},
+			concentration={name="Concentration Aura",textures=
+
+{"Spell_Holy_MindSooth"},castClass="Paladin",type="aura"},
+			fireaura={name="Fire Resistance Aura",textures=
+
+{"Spell_Fire_SealOfFire"},castClass="Paladin",type="aura"},
+			shadowaura={name="Shadow Resistance Aura",textures=
+
+{"Spell_Shadow_SealOfKings"},castClass="Paladin",type="aura"},
+			retribution={name="Retribution Aura",textures=
+
+{"Spell_Holy_AuraOfLight"},castClass="Paladin",type="aura"},
+			frostaura={name="Frost Resistance Aura",textures=
+
+{"Spell_Frost_WizardMark"},castClass="Paladin",type="aura"},
+			di={name="Divine Intervention",textures={"Spell_Nature_TimeStop"},castClass="Paladin",priority=
+
+{priest=2,paladin=2,druid=1,mage=0.5},selfPriority=-10},
+
+			ss={name="Soulstone",textures=
+
+{"Spell_Shadow_SoulGem"},castClass="Warlock",buffFunc=RAB_CastSoulstone,priority=
+
+{priest=2,paladin=2,shaman=2,druid=1},selfPriority=1.2,invert=true,unique=true,ctraid=7,recast=5},
 			ub={name="Unending Breath",textures={"Spell_Shadow_DemonBreath"},castClass="Warlock",recast=3},
-			detectinvisibility={name="Detect Invisibility",textures={"Spell_Shadow_DetectInvisibility","Spell_Shadow_DetectLesserInvisibility"},castClass="Warlock",recast=3},
-			demonarmor={name="Demon Armor",textures={"Spell_Shadow_RagingScream"},castClass="Warlock",type="self",recast=5},
-			bloodpact={name="Blood Pact",textures={"Spell_Shadow_BloodBoil"},castClass="Warlock",type="aura"},
-			paranoia={name="Paranoia",textures={"Spell_Shadow_AuraOfDarkness"},castClass="Warlock",invert=true,type="aura"},
+			detectinvisibility={name="Detect Invisibility",textures=
 
-			hawk={name="Aspect of the Hawk",textures={"Spell_Nature_RavenForm"},castClass="Hunter",type="self"},
-			cheetah={name="Aspect of the Cheetah",textures={"Ability_Mount_JungleTiger"},castClass="Hunter",type="self"},
-			beast={name="Aspect of the Beast",textures={"Ability_Mount_PinkTiger"},castClass="Hunter",type="self"},
-			aspectwild={name="Aspect of the Wild",textures={"Spell_Nature_ProtectionformNature"},castClass="Hunter",type="aura"},
-			pack={name="Aspect of the Pack",textures={"Ability_Mount_WhiteTiger"},castClass="Hunter",type="aura"},
-			monkey={name="Aspect of the Monkey",textures={"Ability_Hunter_AspectOfTheMonkey"},castClass="Hunter",type="self"},
+{"Spell_Shadow_DetectInvisibility","Spell_Shadow_DetectLesserInvisibility"},castClass="Warlock",recast=3},
+			demonarmor={name="Demon Armor",textures=
+
+{"Spell_Shadow_RagingScream"},castClass="Warlock",type="self",recast=5},
+			bloodpact={name="Blood Pact",textures=
+
+{"Spell_Shadow_BloodBoil"},castClass="Warlock",type="aura"},
+			paranoia={name="Paranoia",textures=
+
+{"Spell_Shadow_AuraOfDarkness"},castClass="Warlock",invert=true,type="aura"},
+
+			hawk={name="Aspect of the Hawk",textures=
+
+{"Spell_Nature_RavenForm"},castClass="Hunter",type="self"},
+			cheetah={name="Aspect of the Cheetah",textures=
+
+{"Ability_Mount_JungleTiger"},castClass="Hunter",type="self"},
+			beast={name="Aspect of the Beast",textures=
+
+{"Ability_Mount_PinkTiger"},castClass="Hunter",type="self"},
+			aspectwild={name="Aspect of the Wild",textures=
+
+{"Spell_Nature_ProtectionformNature"},castClass="Hunter",type="aura"},
+			pack={name="Aspect of the Pack",textures=
+
+{"Ability_Mount_WhiteTiger"},castClass="Hunter",type="aura"},
+			monkey={name="Aspect of the Monkey",textures=
+
+{"Ability_Hunter_AspectOfTheMonkey"},castClass="Hunter",type="self"},
 			trueshot={name="True Shot Aura",textures={"Ability_TrueShot"},castClass="Hunter",type="aura"},
                         
 
-			battleshout={name="Battle Shout",textures={"Ability_Warrior_BattleShout"},castClass="Warrior",type="aura"},
+			battleshout={name="Battle Shout",textures=
 
-			incombat={name="In Combat",sfunc=UnitAffectingCombat,sfuncmodel=2,havebuff="In Combat",missbuff="Out of combat" },
-			pvp={name="PvP Enabled",sfunc=UnitIsPVP,sfuncmodel=2 ,havebuff="PvP Enabled",missbuff="Not PvP Enabled"},
-			flag={name="WSG Flag",textures={"INV_BannerPVP_01","INV_BannerPVP_02"} ,havebuff="Carrying Flag",missbuff="No Flag"},
-			battlestandard={name="Battle Standard",textures={"INV_Banner_02","INV_Banner_01"},castClass="Item" ,type="aura"},
+{"Ability_Warrior_BattleShout"},castClass="Warrior",type="aura"},
 
-			dragonslayer={name="Rallying Cry of the Dragonslayer",textures={"INV_Misc_Head_Dragon_01"},castClass="World Buffs"},
-                        forhorde={name="For the Horde Buff",textures={"Spell_Arcane_TeleportOrgrimmar"},castClass="World Buffs"},
-                        zgbuff={name="Zandalar Buff(ZG)",textures={"Ability_Creature_Poison_05"},castClass="World Buffs"},
-			regen={name="Regenerating",textures={"INV_Drink_18","INV_Drink_07","INV_Misc_Fork&Knife"},castClass="Item" ,havebuff="Regenerating",missbuff="Not Regenerating",type="self"},
+			incombat={name="In Combat",sfunc=UnitAffectingCombat,sfuncmodel=2,havebuff="In 
+
+Combat",missbuff="Out of combat" },
+			pvp={name="PvP Enabled",sfunc=UnitIsPVP,sfuncmodel=2 ,havebuff="PvP Enabled",missbuff="Not PvP 
+
+Enabled"},
+			flag={name="WSG Flag",textures={"INV_BannerPVP_01","INV_BannerPVP_02"} ,havebuff="Carrying 
+
+Flag",missbuff="No Flag"},
+			battlestandard={name="Battle Standard",textures=
+
+{"INV_Banner_02","INV_Banner_01"},castClass="Item" ,type="aura"},
+
+			dragonslayer={name="Rallying Cry of the Dragonslayer",textures=
+
+{"INV_Misc_Head_Dragon_01"},castClass="World Buffs"},
+                        forhorde={name="For the Horde Buff",textures={"Spell_Arcane_TeleportOrgrimmar"},castClass="World 
+
+Buffs"},
+                        zgbuff={name="Zandalar Buff(ZG)",textures={"Ability_Creature_Poison_05"},castClass="World 
+
+Buffs"},
+			regen={name="Regenerating",textures=
+
+{"INV_Drink_18","INV_Drink_07","INV_Misc_Fork&Knife"},castClass="Item" ,havebuff="Regenerating",missbuff="Not 
+
+Regenerating",type="self"},
 			hat={name="Admiral's Hat",textures={"INV_Misc_Horn_03"},castClass="MISC-2",type="aura"},
 
 			giants={name="Elixir of the Giants",textures={"INV_Potion_61"},castClass="Potions" ,type="aura"},
-			sages={name="Elixir of the Sages",textures={"INV_Potion_29"},castClass="Potions" ,type="aura"},			
-			greaterarcane={name="Greater Arcane Elixir",textures={"INV_Potion_25"},castClass="Potions",type="aura"},
-                        winterfall={name="Winterfall Firewater",textures={"INV_Potion_92"},castClass="Potions",type="aura"},
-			mongoose={name="Elixir of the Mongoose",textures={"INV_Potion_32"},castClass="Potions" ,type="aura"},
+			sages={name="Elixir of the Sages",textures={"INV_Potion_29"},castClass="Potions" ,type="aura"},		
+
+	
+			greaterarcane={name="Greater Arcane Elixir",textures=
+
+{"INV_Potion_25"},castClass="Potions",type="aura"},
+                        winterfall={name="Winterfall Firewater",textures=
+
+{"INV_Potion_92"},castClass="Potions",type="aura"},
+			mongoose={name="Elixir of the Mongoose",textures={"INV_Potion_32"},castClass="Potions" 
+
+,type="aura"},
 			titans={name="Flask of the Titans",textures={"INV_Potion_62"},castClass="Flasks" ,type="aura"},
-			tuber={name="Runn Tum Tuber Surprise",textures={"INV_Misc_Organ_03"},castClass="Food-like buffs" ,type="aura"},
-                        squid={name="Squid Check",textures={"INV_Misc_Fish_13"},castClass="Food-like buffs",invert=true,type="aura"},
-                        bandage={name="Recently Bandaged!",textures={"INV_Misc_Bandage_08"},castClass="MISC-2" ,type="debuff"},
-                        rumsey={name="Who was drinking Rum?(Hic!)",textures={"INV_Drink_04"},castClass="Food-like buffs" ,type="aura"},
-                        restora={name="Restorative Active",textures={"INV_Drink_01"},castClass="MISC Potions" ,type="aura"},
-                        arcanerezprot={name="Arcane Resistance Potion",textures={"Spell_Holy_PrayerOfHealing02"},castClass="Resistance Potions",type="aura"},
-                        naturerezprot={name="Nature Resistance Potion",textures={"Spell_Nature_SpiritArmor"},castClass="Resistance Potions",type="aura"},
-                        firerezprot={name="Fire Resistance Potion",textures={"Spell_Fire_FireArmor"},castClass="Resistance Potions",type="aura"},
-                        shadowrezprot={name="Shadow Resistance Potion",textures={"Spell_Shadow_RagingScream"},castClass="Resistance Potions",type="aura"},
-                        magicalrez={name="Magical Resistance 50",textures={"INV_Potion_08"},castClass="Resistance Potions",type="aura"},
+			tuber={name="Runn Tum Tuber Surprise",textures={"INV_Misc_Organ_03"},castClass="Food-like buffs" 
+
+,type="aura"},
+                        squid={name="Squid Check",textures={"INV_Misc_Fish_13"},castClass="Food-like 
+
+buffs",invert=true,type="aura"},
+                        bandage={name="Recently Bandaged!",textures={"INV_Misc_Bandage_08"},castClass="MISC-2" 
+
+,type="debuff"},
+                        rumsey={name="Who was drinking Rum?(Hic!)",textures={"INV_Drink_04"},castClass="Food-like buffs" 
+
+,type="aura"},
+                        restora={name="Restorative Active",textures={"INV_Drink_01"},castClass="MISC Potions" 
+
+,type="aura"},
+                        arcanerezprot={name="Arcane Resistance Potion",textures=
+
+{"Spell_Holy_PrayerOfHealing02"},castClass="Resistance Potions",type="aura"},
+                        naturerezprot={name="Nature Resistance Potion",textures=
+
+{"Spell_Nature_SpiritArmor"},castClass="Resistance Potions",type="aura"},
+                        firerezprot={name="Fire Resistance Potion",textures=
+
+{"Spell_Fire_FireArmor"},castClass="Resistance Potions",type="aura"},
+                        shadowrezprot={name="Shadow Resistance Potion",textures=
+
+{"Spell_Shadow_RagingScream"},castClass="Resistance Potions",type="aura"},
+                        magicalrez={name="Magical Resistance 50",textures={"INV_Potion_08"},castClass="Resistance 
+
+Potions",type="aura"},
                         wellfed={name="Well Fed",textures={"Spell_Misc_Food"},castClass="Food-like buffs",type="aura"},
-                        songflower={name="Songflower",textures={"Spell_Holy_MindVision"},castClass="World Buffs" ,type="aura"},
-                        dmcrit={name="Slip'kik's Savy",textures={"Spell_Holy_LesserHeal02"},castClass="World Buffs" ,type="aura"},
-                        dmdmg={name="Fengus's Ferocity",textures={"Spell_Nature_UndyingStrength"},castClass="World Buffs" ,type="aura"},
-                        armorpot={name="Elixir of Superior Defense",textures={"INV_Potion_66"},castClass="Tanking Consumables" ,type="aura"},
+                        songflower={name="Songflower",textures={"Spell_Holy_MindVision"},castClass="World Buffs" 
+
+,type="aura"},
+                        dmcrit={name="Slip'kik's Savy",textures={"Spell_Holy_LesserHeal02"},castClass="World Buffs" 
+
+,type="aura"},
+                        DMF={name="Darkmoon Buff",textures={"INV_Misc_Orb_02"},castClass="World Buffs" ,type="aura"},
+                        dmdmg={name="Fengus's Ferocity",textures={"Spell_Nature_UndyingStrength"},castClass="World Buffs" 
+
+,type="aura"},
+                        armorpot={name="Elixir of Superior Defense",textures={"INV_Potion_66"},castClass="Tanking 
+
+Consumables" ,type="aura"},
                         
-                        hppot={name="Elixir of Fortitude",textures={"INV_Potion_44"},castClass="Tanking Consumables" ,type="aura"},
-                       
-                        mtrollpot={name="Mighty Troll Potion",textures={"INV_Potion_79"},castClass="Tanking Consumables" ,type="aura"},
-                        nightfin={name="Nightfin Soup",textures={"INV_Drink_17"},castClass="Food-like buffs" ,type="aura"},
+                        hppot={name="Elixir of Fortitude",textures={"INV_Potion_44"},castClass="Tanking Consumables" 
+
+,type="aura"},
+                        jujupower={name="Juju Power",textures={"INV_Misc_MonsterScales_11"},castClass="Melee MISC" 
+
+,type="aura"},
+                        mtrollpot={name="Mighty Troll Potion",textures={"INV_Potion_79"},castClass="Tanking Consumables" 
+
+,type="aura"},
+                        nightfin={name="Nightfin Soup",textures={"INV_Drink_17"},castClass="Food-like buffs" 
+
+,type="aura"},
                         mageblood={name="Mageblood Potion",textures={"INV_Potion_45"},castClass="Potions" ,type="aura"},
-                        bronze={name="Bronze Dragonaids",textures={"INV_Misc_Head_Dragon_Bronze"},castClass="Item" ,type="debuff"},
+                        bronze={name="Bronze Dragonaids",textures={"INV_Misc_Head_Dragon_Bronze"},castClass="Item" 
+
+,type="debuff"},
                         drinking={name="Currently Drinking: ",textures={"INV_Drink_18"},castClass="MISC-2" ,type="aura"},
 
-			flute={name="Piccolo of the Dancing Flame",textures={"INV_Misc_Flute_01"},castClass="Item",invert=true,type="aura"},
-			adcommision={name="Argent Dawn Commission",textures={"INV_Jewelry_Talisman_07"},castClass="Item",invert=true,type="self"},
-			furbolg={name="Furbolg Transform",textures={"INV_Misc_MonsterClaw_04"},castClass="Item",invert=true},
-			cozyfire={name="Cozy Fire",textures={"Spell_Fire_Fire"},castClass="Item",type="aura",invert=true},
+			flute={name="Piccolo of the Dancing Flame",textures=
+
+{"INV_Misc_Flute_01"},castClass="Item",invert=true,type="aura"},
+			adcommision={name="Argent Dawn Commission",textures=
+
+{"INV_Jewelry_Talisman_07"},castClass="Item",invert=true,type="self"},
+			furbolg={name="Furbolg Transform",textures=
+
+{"INV_Misc_MonsterClaw_04"},castClass="Item",invert=true},
+			cozyfire={name="Cozy Fire",textures=
+
+{"Spell_Fire_Fire"},castClass="Item",type="aura",invert=true},
 
 			frostmark={name="Mark of Frost",textures={"Spell_Frost_ChainsOfIce"},invert=true,type="debuff"},
-			naturemark={name="Mark of Nature",textures={"Spell_Nature_SpiritArmor"},invert=true,type="debuff"},
+			naturemark={name="Mark of Nature",textures=
+
+{"Spell_Nature_SpiritArmor"},invert=true,type="debuff"},
 			shazz={name="Amplify Magic [Shazzrah]",textures={"Spell_Arcane_StarFire"},type="debuff"},
-			cthun={name="Digestive Acid [C'Thun]",textures={"Ability_Creature_Disease_02"},type="debuff",invert=true},
+			cthun={name="Digestive Acid [C'Thun]",textures=
+
+{"Ability_Creature_Disease_02"},type="debuff",invert=true},
 			drunk={name="Drunk [ZG]",textures={"Ability_Creature_Poison_01"},type="debuff"},
 			dcurse={name="Type: Curse",queryFunc=RAB_QueryDebuff,ext="Curse",type="debuff"},
 			dmagic={name="Type: Magic",queryFunc=RAB_QueryDebuff,ext="Magic",type="debuff"},
@@ -1011,19 +1296,53 @@ RAB_Buffs = 	{
 			dtypeless={name="Type: Typeless",queryFunc=RAB_QueryDebuff,ext="",type="debuff"},
 			dicanremove={name="Type: You can remove",queryFunc=RAB_QueryDebuff,ext="SELF",type="debuff"},
 
-			health={name="Health",type="special",queryFunc=RAB_QueryHealth,ext="hp",buffFunc=RAB_CastResurrect,description="Sum of health versus sum of max health."},
-			alive={name="Alive",type="special",queryFunc=RAB_QueryHealth,ext="alive",buffFunc=RAB_CastResurrect,description="Number of people alive versus total headcount."},
-			mana={name="Mana",type="special",queryFunc=RAB_QueryMana,description="Sum of current mana vs sum of max mana.",ignoreClass="rw"},
-			status={name="Status",type="special",queryFunc=RAB_QueryStatus,description="Displays buff sumary for PW:F, AI, MotW, BoK, BoS, BoW and Soulstones.",noUI=true},
-			scanunknown={name="Unknown Buff Scan",type="special",queryFunc=RAB_ScanRaid,ext="unknown",description="Scans raid for unknown buff textures.",noUI=true},
-			scanraid={name="Raid Scan",type="special",queryFunc=RAB_ScanRaid,ext="known",description="Scans raid and displays a report of all known buffs.",noUI=true},
-			ishere={name="Is Here",type="special",queryFunc=RAB_QueryHere,description="Displays people currently afk, offline or invisible."},
-			ctra={name="CTRA Version",type="special",queryFunc=RAB_QueryCTRAVersion,description="Displays people whose CTRA is out of date."},
-			blank={name="Blank",type="special",queryFunc=RAB_QueryBlank,description="Displays a blank bar - use as a header if you wish."},
-			onycloak={name="Onyxia Cloak",type="special",queryFunc=RAB_QueryInventoryItem,ext="15:15138",buffFunc=RAB_CastInventoryItem,description="Checks that people are wearing their Onyxia Cloak."},
-			info={name="Target's (De)Buffs",type="special",queryFunc=RAB_QueryBuffInfo,description="Outputs buff names / textures for buffs and debuffs on your current target.",noUI=true},
+			health=
 
-			priestres={name="Resurrection",type="dummy",textures={"Spell_Holy_Resurrection"},castClass="Priest"},
-			paladinres={name="Redemption",type="dummy",textures={"Spell_Holy_Resurrection"},castClass="Paladin"},
-			shamanres={name="Ancestral Spirit",type="dummy",textures={"Spell_Nature_Regenerate"},castClass="Shaman"}
+{name="Health",type="special",queryFunc=RAB_QueryHealth,ext="hp",buffFunc=RAB_CastResurrect,description="Sum of health 
+
+versus sum of max health."},
+			alive=
+
+{name="Alive",type="special",queryFunc=RAB_QueryHealth,ext="alive",buffFunc=RAB_CastResurrect,description="Number of 
+
+people alive versus total headcount."},
+			mana={name="Mana",type="special",queryFunc=RAB_QueryMana,description="Sum of current mana vs sum 
+
+of max mana.",ignoreClass="rw"},
+			status={name="Status",type="special",queryFunc=RAB_QueryStatus,description="Displays buff sumary 
+
+for PW:F, AI, MotW, BoK, BoS, BoW and Soulstones.",noUI=true},
+			scanunknown={name="Unknown Buff 
+
+Scan",type="special",queryFunc=RAB_ScanRaid,ext="unknown",description="Scans raid for unknown buff textures.",noUI=true},
+			scanraid={name="Raid Scan",type="special",queryFunc=RAB_ScanRaid,ext="known",description="Scans 
+
+raid and displays a report of all known buffs.",noUI=true},
+			ishere={name="Is Here",type="special",queryFunc=RAB_QueryHere,description="Displays people 
+
+currently afk, offline or invisible."},
+			ctra={name="CTRA Version",type="special",queryFunc=RAB_QueryCTRAVersion,description="Displays 
+
+people whose CTRA is out of date."},
+			blank={name="Blank",type="special",queryFunc=RAB_QueryBlank,description="Displays a blank bar - 
+
+use as a header if you wish."},
+			onycloak={name="Onyxia 
+
+Cloak",type="special",queryFunc=RAB_QueryInventoryItem,ext="15:15138",buffFunc=RAB_CastInventoryItem,description="Checks 
+
+that people are wearing their Onyxia Cloak."},
+			info={name="Target's (De)Buffs",type="special",queryFunc=RAB_QueryBuffInfo,description="Outputs 
+
+buff names / textures for buffs and debuffs on your current target.",noUI=true},
+
+			priestres={name="Resurrection",type="dummy",textures=
+
+{"Spell_Holy_Resurrection"},castClass="Priest"},
+			paladinres={name="Redemption",type="dummy",textures=
+
+{"Spell_Holy_Resurrection"},castClass="Paladin"},
+			shamanres={name="Ancestral Spirit",type="dummy",textures=
+
+{"Spell_Nature_Regenerate"},castClass="Shaman"}
 		};
