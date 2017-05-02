@@ -976,7 +976,7 @@ RAB_Buffs = 	{
                         rumsey={name="Who was drinking Rum?(Hic!)",textures={"INV_Drink_04"},castClass="Food-like buffs" ,type="aura"},
                         restora={name="Restorative Active",textures={"INV_Drink_01"},castClass="MISC Potions" ,type="aura"},
                         arcanerezprot={name="Arcane Resistance Potion",textures={"Spell_Holy_PrayerOfHealing02"},castClass="Resistance Potions",type="aura"},
-                        naturerezprot={name="Nature Resistance Potion",textures={"INV_Potion_22"},castClass="Resistance Potions",type="aura"},
+                        naturerezprot={name="Nature Resistance Potion",textures={"Spell_Nature_SpiritArmor"},castClass="Resistance Potions",type="aura"},
                         firerezprot={name="Fire Resistance Potion",textures={"Spell_Fire_FireArmor"},castClass="Resistance Potions",type="aura"},
                         shadowrezprot={name="Shadow Resistance Potion",textures={"Spell_Shadow_RagingScream"},castClass="Resistance Potions",type="aura"},
                         magicalrez={name="Magical Resistance 50",textures={"INV_Potion_08"},castClass="Resistance Potions",type="aura"},
