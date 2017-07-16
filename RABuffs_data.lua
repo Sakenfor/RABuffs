@@ -986,7 +986,7 @@ RAB_Buffs = 	{
                         dmcrit={name="Slip'kik's Savy",textures={"Spell_Holy_LesserHeal02"},castClass="World Buffs" ,type="aura"},
                         darkmoon={name="Darkmoon Buff",textures={"INV_Misc_Orb_02"},castClass="World Buffs" ,type="aura"},
                         dmdmg={name="Fengus's Ferocity",textures={"Spell_Nature_UndyingStrength"},castClass="World Buffs" ,type="aura"},
-                        armorpot={name="Elixir of Superior Defense",textures={"INV_Potion_65"},castClass="Tanking Consumables" ,type="aura"},
+                        armorpot={name="Elixir of Superior Defense",textures={"INV_Potion_86"},castClass="Tanking Consumables" ,type="aura"},
                         zanza={name="Zanza/Arcane Elix.",textures={"INV_Potion_30"},castClass="World Buffs" ,type="aura"},
                         hppot={name="Elixir of Fortitude",textures={"INV_Potion_44"},castClass="Tanking Consumables" ,type="aura"},
                         jujupower={name="Juju Power",textures={"INV_Misc_MonsterScales_11"},castClass="Melee MISC" ,type="aura"},
